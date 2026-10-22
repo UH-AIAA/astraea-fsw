@@ -7,3 +7,8 @@
 
 rsource "drivers/Kconfig"
 rsource "lib/Kconfig"
+
+
+mainmenu "ASTRAEA-FSW"
+
+source "Kconfig.zephyr"
