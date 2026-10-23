@@ -5,7 +5,7 @@
 # as the module CMake entry point (see zephyr/module.yml).
 
 # set min version
-cmake_minimum_required(VERSION 4.4)
+cmake_minimum_required(VERSION 4.2)
 
 # Set board to DEV board for now
 # NOTE: this will need to be updated
