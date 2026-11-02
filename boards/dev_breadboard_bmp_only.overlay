@@ -1,0 +1,56 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pinctrl/esp32s3-pinctrl.h>
+#include <zephyr/dt-bindings/sensor/bmp581.h>
+
+/* root node */
+/ {
+
+	/* chosen nodes (what we choose some predefined zephyr things to mean) */
+	chosen {
+		
+	};
+	
+	/* aliases (how we define names for physical hardware nodes) */
+	aliases {
+		spi = &spi3;
+		altimeter = &bmp_581;
+	};
+};
+
+
+/* this pinctrl block lets us override the defaults defined in
+   ../../zephyr/boards/espressif/esp32_devkitc/esp32_devkitc-pinctrl.dtsi */
+&pinctrl {
+	spi3_default: spi3-default {
+		group1 {
+			/* options in ../../zephyr/dt-bindings/pinctrl/esp32s3-pinctrl.h */
+			pinmux = <SPIM3_SCLK_GPIO4>,
+			         <SPIM3_MISO_GPIO5>,
+					 <SPIM3_MOSI_GPIO6>,
+					 /* CS PINS */
+					 <SPIM3_CSEL_GPIO7>;
+		};
+	};
+};
+
+/* define what sensors are on the SPI bus */
+&spi3 {
+	status = "okay";    /* IMPORTANT: THESE MUST BE IN ORDER */
+
+	pinctrl-0 = <&spi3_default>;
+	pinctrl-names = "default";
+	
+	// cs-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;  /* BMP581 */
+
+	bmp_581: bmp581@0 {
+		compatible = "bosch,bmp581";
+		reg = <0>;  /* cs-gpios index 0!! */
+		spi-max-frequency = <12000000>;
+
+		/* config settings allowed by driver */
+		/* see https://docs.zephyrproject.org/latest/build/dts/api/bindings/sensor/bosch,bmp581-spi.html
+		   for example */
+		odr = <BMP581_DT_ODR_50_HZ>;
+		press-osr = <BMP581_DT_OVERSAMPLING_1X>;  /* not oversampled */
+	};
+};
