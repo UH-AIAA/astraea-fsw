@@ -11,6 +11,12 @@
 
 #include <zephyr/app_version.h>
 
+// zbus
+#include <zephyr/zbus/zbus.h>
+
+// astraea includes
+#include "astraea/nav.h"
+
 LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
 #define BLINK_PERIOD_MS_STEP 100U
@@ -71,6 +77,11 @@ int main(void)
 		// }
 
 		// last_val = val;
+
+		// Nathan Test
+		AltMsg_t testMsg;
+		int rc = getSampleMessage(&testMsg);
+		printk("PRESS: %f\n", testMsg.press);
 
 		k_sleep(K_MSEC(100));
 	}
